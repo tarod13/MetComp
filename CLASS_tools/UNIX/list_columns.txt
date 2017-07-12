@@ -1,0 +1,5 @@
+Luis	Bogota	23	3.4
+Juan	Cali	25 2.0
+Ana	Medellin	34 5.0
+Maria	Cali	40 1.0
+Felipe	Bogota	23 3.0

@@ -1,0 +1,1057 @@
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object is not callable
+>>> data(1)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'tuple' object is not callable
+>>> data[1]
+'Doe'
+>>> print("%s %s %s. Your current balance is %d" % (format_string,data[1],data[2],data[3]))
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IndexError: tuple index out of range
+>>> print("%s %s %s. Your current balance is %d" % (format_string,data[0],data[1],data[2]))
+Hello John Doe. Your current balance is 53
+>>> print("%s %s %s. Your current balance is %s" % (format_string,data[0],data[1],data[2]))
+Hello John Doe. Your current balance is 53.44
+>>> print("%s %s %s. Your current balance is %f" % (format_string,data[0],data[1],data[2]))
+Hello John Doe. Your current balance is 53.440000
+>>> print("%s %s %s. Your current balance is %.2f" % (format_string,data[0],data[1],data[2]))
+Hello John Doe. Your current balance is 53.44
+>>> def volume(radius):
+...  vol = (4.0/3.0)*3.14159*pow(radius,3)
+...  return vol
+... 
+>>> volume(1)
+4.188786666666666
+>>> print(%.2f volume(1))
+  File "<stdin>", line 1
+    print(%.2f volume(1))
+          ^
+SyntaxError: invalid syntax
+>>> print(volume(1),%.2f)
+  File "<stdin>", line 1
+    print(volume(1),%.2f)
+                    ^
+SyntaxError: invalid syntax
+>>> print("%.2f" % volume(1))
+4.19
+>>> print("%.2f" % volume(3.141519))
+129.87
+>>> print("%.2f" % volume(0))
+0.00
+>>> print("%.2f" % volume(2))
+33.51
+>>> quit()
+linus@compufi12:~/tarod13> history
+   67  ls
+   68  cd AFH
+   69  ls
+   70  mkdir computacionales
+   71  cd computacionales
+   72  mkdir rotationcurves
+   73  cd rotationcurves
+   74  wget http://iopscience.iop.org/1538-3881/122/5/2396/fulltext/datafile3.txt
+   75  ls
+   76  gedit CurvasdeRotacion.sh 
+   77  ls
+   78  gedit CurvasdeRotacion.sh 
+   79  gedit RotationCurve_F571-8.txt
+   80  gedit CurvasdeRotacion.sh 
+   81  chmod u+x CurvasdeRotacion.sh
+   82  ./CurvasdeRotacion.sh 
+   83  gedit RotationCurve_F571-8.txt
+   84  gedit CurvasdeRotacion.sh 
+   85  ls
+   86  rm datafile3.txt
+   87  ./CurvasdeRotacion.sh 
+   88  ls
+   89  gedit datafile3.txt
+   90  ./CurvasdeRotacion.sh 
+   91  ls
+   92  gedit RotationCurve_F571-8.txt
+   93  rm rotationcurves
+   94  cd .. 
+   95  rm -R rotationcurves
+   96  cd ..
+   97  rm -R computacionales
+   98  gedit python.py 
+   99  python python.py 
+  100  gedit python.py 
+  101  python python.py 
+  102  gedit python.py 
+  103  python python.py 
+  104  gedit python.py 
+  105  python python.py 
+  106  gedit python.py 
+  107  python python.py 
+  108  gedit python.py 
+  109  python python.py 
+  110  gedit python.py 
+  111  python python.py 
+  112  gedit python.py 
+  113  python python.py 
+  114  gedit python.py 
+  115  python python.py 
+  116  gedit python.py 
+  117  python python.py 
+  118  gedit python.py 
+  119  python python.py 
+  120  gedit python.py 
+  121  python python.py 
+  122  gedit python.py 
+  123  python python.py 
+  124  gedit python.py 
+  125  python python.py 
+  126  gedit python.py 
+  127  python python.py 
+  128  gedit python.py 
+  129  python python.py 
+  130  gedit python.py 
+  131  python python.py 
+  132  python
+  133  emacs
+  134  exit
+  135  gedit DavidJurado.py
+  136  python DavidJurado.py
+  137  gedit DavidJurado.py
+  138  python DavidJurado.py
+  139  gedit DavidJurado.py
+  140  python DavidJurado.py
+  141  gedit DavidJurado.py
+  142  python DavidJurado.py
+  143  gedit DavidJurado.py
+  144  python DavidJurado.py
+  145  gedit DavidJurado.py
+  146  python DavidJurado.py
+  147  gedit DavidJurado.py
+  148  python DavidJurado.py
+  149  gedit DavidJurado.py
+  150  python DavidJurado.py
+  151  gedit DavidJurado.py
+  152  python DavidJurado.py
+  153  gedit DavidJurado.py
+  154  python DavidJurado.py
+  155  gedit DavidJurado.py
+  156  python DavidJurado.py
+  157  gedit DavidJurado.py
+  158  python DavidJurado.py
+  159  gedit DavidJurado.py
+  160  python DavidJurado.py
+  161  gedit DavidJurado.py
+  162  python DavidJurado.py
+  163  gedit DavidJurado.py
+  164  python DavidJurado.py
+  165  pyton
+  166  python
+  167  mkdir FBeron
+  168  cd FBeron
+  169  emacs CurvasDeRotacion.sh &
+  170  gedit PLOTS_RotationCurves.py &
+  171  clear
+  172  ls
+  173  chmod u+x CurvasDeRotacion.sh
+  174  ls
+  175  ./CurvasDeRotacion.sh 
+  176  gedit CurvasDeRotacion.sh &
+  177  emacs CurvasDeRotacion.sh &
+  178  ./CurvasDeRotacion.sh 
+  179  emacs PLOTS_RotationCurves.py &
+  180  ./CurvasDeRotacion.sh 
+  181  clear
+  182  ./CurvasDeRotacion.sh 
+  183  clear
+  184  ls
+  185  rm PLOTS_RotationCurves.py~ 
+  186  rm CurvasDeRotacion.sh~
+  187  clear
+  188  ls
+  189  cd RotationCurves/
+  190  ls
+  191  clear
+  192  ls
+  193  python
+  194  cd ..
+  195  gedit CurvasDeRotacion.sh &
+  196  clear
+  197  pwd
+  198  ls
+  199  rm CurvasDeRotacion.sh~
+  200  ./CurvasDeRotacion.sh 
+  201  emacs CurvasDeRotacion.sh &
+  202  ./CurvasDeRotacion.sh 
+  203  emacs PLOTS_RotationCurves.py &
+  204  clear
+  205  ./CurvasDeRotacion.sh 
+  206  cd FBeron/
+  207  ls
+  208  chmod u+x Convetion.sh
+  209  emcas PLOTS_RotationCurves.py &
+  210  emacs PLOTS_RotationCurves.py &
+  211  ./CurvasDeRotacion.sh 
+  212  clear
+  213  emacs Convetion.sh &
+  214  emacs PLOTS_Convection.py &
+  215  la
+  216  ls
+  217  ./Convetion.sh 
+  218  clear
+  219  python PLOTS_Convection.py
+  220  clear
+  221  python PLOTS_Convection.py
+  222  clear
+  223  python PLOTS_Convection.py
+  224  clear
+  225  python PLOTS_Convection.py
+  226  clear
+  227  python PLOTS_Convection.py
+  228  clear
+  229  ./Convetion.sh
+  230  man awk}
+  231  man awk
+  232  ./Convetion.sh
+  233  python PLOTS_Convection.py 
+  234  cd Convection/
+  235  python PLOTS_Convection.py 
+  236  cd ..
+  237  ./Convetion.sh
+  238  emacs PLOTS_Convection.py &
+  239  python PLOTS_Convection.py 
+  240  clear
+  241  python PLOTS_Convection.py
+  242  python
+  243  python PLOTS_Convection.py
+  244  gedit Davidjurado_hw4.py
+  245  input = ""
+  246  exit() clear
+  247  gedit Davidjurado_hw4.py
+  248  python
+  249  python Davidjurado_hw4.py
+  250  gedit Davidjurado_hw4.py
+  251  python Davidjurado_hw4.py
+  252  gedit Davidjurado_hw4.py
+  253  python Davidjurado_hw4.py
+  254  gedit Davidjurado_hw4.py
+  255  python Davidjurado_hw4.py
+  256  gedit Davidjurado_hw4.py
+  257  python Davidjurado_hw4.py
+  258  gedit Davidjurado_hw4.py
+  259  python Davidjurado_hw4.py
+  260  gedit Davidjurado_hw4.py
+  261  python Davidjurado_hw4.py
+  262  gedit Davidjurado_hw4.py
+  263  python Davidjurado_hw4.py
+  264  gedit Davidjurado_hw4.py
+  265  python Davidjurado_hw4.py
+  266  gedit Davidjurado_hw4.py
+  267  python Davidjurado_hw4.py
+  268  gedit Davidjurado_hw4.py
+  269  python Davidjurado_hw4.py
+  270  DavidJurado.py
+  271  gedit DavidJurado.py
+  272  gedit Davidjurado_hw4.py
+  273  python Davidjurado_hw4.py
+  274  gedit Davidjurado_hw4.py
+  275  gedit DavidJurado.py
+  276  gedit Davidjurado_hw4.py
+  277  gedit DavidJurado.py
+  278  gedit Davidjurado_hw4.py
+  279  python Davidjurado_hw4.py
+  280  gedit Davidjurado_hw4.py
+  281  python Davidjurado_hw4.py
+  282  gedit Davidjurado_hw4.py
+  283  python Davidjurado_hw4.py
+  284  gedit Davidjurado_hw4.py
+  285  python Davidjurado_hw4.py
+  286  gedit Davidjurado_hw4.py
+  287  gedit DavidJurado.py
+  288  gedit Davidjurado_hw4.py
+  289  python Davidjurado_hw4.py
+  290  gedit Davidjurado_hw4.py
+  291  python Davidjurado_hw4.py
+  292  gedit Davidjurado_hw4.py
+  293  python Davidjurado_hw4.py
+  294  gedit Davidjurado_hw4.py
+  295  python Davidjurado_hw4.py
+  296  gedit Davidjurado_hw4.py
+  297  gedit DavidJurado.py
+  298  gedit Davidjurado_hw4.py
+  299  python Davidjurado_hw4.py
+  300  gedit Davidjurado_hw4.py
+  301  python Davidjurado_hw4.py
+  302  gedit Davidjurado_hw4.py
+  303  python Davidjurado_hw4.py
+  304  gedit Davidjurado_hw4.py
+  305  python Davidjurado_hw4.py
+  306  gedit Davidjurado_hw4.py
+  307  python Davidjurado_hw4.py
+  308  gedit Davidjurado_hw4.py
+  309  python Davidjurado_hw4.py
+  310  gedit Davidjurado_hw4.py
+  311  python Davidjurado_hw4.py
+  312  gedit Davidjurado_hw4.py
+  313  python Davidjurado_hw4.py
+  314  gedit Davidjurado_hw4.py
+  315  python Davidjurado_hw4.py
+  316  gedit Davidjurado_hw4.py
+  317  python Davidjurado_hw4.py
+  318  gedit Davidjurado_hw4.py
+  319  python Davidjurado_hw4.py
+  320  gedit Davidjurado_hw4.py
+  321  python Davidjurado_hw4.py
+  322  gedit Davidjurado_hw4.py
+  323  python Davidjurado_hw4.py
+  324  gedit Davidjurado_hw4.py
+  325  python Davidjurado_hw4.py
+  326  gedit Davidjurado_hw4.py
+  327  python Davidjurado_hw4.py
+  328  gedit Davidjurado_hw4.py
+  329  python Davidjurado_hw4.py
+  330  gedit Davidjurado_hw4.py
+  331  python Davidjurado_hw4.py
+  332  gedit Davidjurado_hw4.py
+  333  python Davidjurado_hw4.py
+  334  gedit Davidjurado_hw4.py
+  335  python Davidjurado_hw4.py
+  336  gedit Davidjurado_hw4.py
+  337  python Davidjurado_hw4.py
+  338  gedit Davidjurado_hw4.py
+  339  python Davidjurado_hw4.py
+  340  gedit Davidjurado_hw4.py
+  341  python Davidjurado_hw4.py
+  342  gedit Davidjurado_hw4.py
+  343  python Davidjurado_hw4.py
+  344  gedit Davidjurado_hw4.py
+  345  python Davidjurado_hw4.py
+  346  gedit Davidjurado_hw4.py
+  347  python Davidjurado_hw4.py
+  348  gedit Davidjurado_hw4.py
+  349  python Davidjurado_hw4.py
+  350  gedit Davidjurado_hw4.py
+  351  python Davidjurado_hw4.py
+  352  gedit Davidjurado_hw4.py
+  353  python Davidjurado_hw4.py
+  354  gedit Davidjurado_hw4.py
+  355  python Davidjurado_hw4.py
+  356  gedit Davidjurado_hw4.py
+  357  python Davidjurado_hw4.py
+  358  gedit Davidjurado_hw4.py
+  359  gedit DavidJurado.py
+  360  gedit Davidjurado_hw4.py
+  361  python Davidjurado_hw4.py
+  362  gedit Davidjurado_hw4.py
+  363  python Davidjurado_hw4.py
+  364  gedit Davidjurado_hw4.py
+  365  python Davidjurado_hw4.py
+  366  gedit Davidjurado_hw4.py
+  367  python Davidjurado_hw4.py
+  368  gedit Davidjurado_hw4.py
+  369  ipython notebook
+  370  mkdir aifos
+  371  cd aifos
+  372  gedit Temperatura.sh &
+  373  gedit pca_room.py
+  374  gedit pca_room.py &
+  375  ls
+  376  room-temperature.csv
+  377  cat room-temperature.csv
+  378  tiempo = linspace(0.0,24,0.5)
+  379  python pca_room.py 
+  380  /.Te
+  381  /.Temperature.sh
+  382  ls
+  383  ./Temperatura.sh
+  384  chmod u+x  Temperatura.sh
+  385  ./Temperatura.sh
+  386  ls
+  387  rm room-temperature.csv
+  388  rm room-temperature.csv.1 
+  389  cd Dir_Room
+  390  ls
+  391  mv pca_room.py
+  392  ls
+  393  python pca_room.py
+  394  ls
+  395  gedit pca_room.py &
+  396  gedit 
+  397  gedit room-temperature.txt
+  398  cd ..
+  399  ls
+  400  gedit Temperatura.sh
+  401  ./Temperatura.sh
+  402  cd Dir_Room
+  403  ls
+  404  gedit room-temperature.txt
+  405  ./Temperatura.sh
+  406  cd ..
+  407  ./Temperatura.sh
+  408  cd Dir_Room
+  409  ls
+  410  gedit room-temperature.txt
+  411  cd ..
+  412  cd  Dir_Room/
+  413  cd ..
+  414  ./Temperatura.sh
+  415  cd Dir_Room
+  416  python pca_room.py 
+  417  cd ..
+  418  ./Temperatura.sh
+  419  cd Dir_Room
+  420  ls
+  421  gedit room-temperature.txt
+  422  ./Temperatura.sh
+  423  cd ..
+  424  ./Temperatura.sh
+  425  clear
+  426  ./Temperatura.sh
+  427  cd Dir_Room
+  428  ls
+  429  gedit room-temperature.txt
+  430  cd ..
+  431  ./Temperatura.sh
+  432  cd Dir_Room
+  433  gedit room-T.txt
+  434  ls
+  435  gedit room_T.txt
+  436  lsz
+  437  ls
+  438  less room-temperature.txt
+  439  awk{print $2} room-temperature.csv
+  440  awk '{print $2}' room-temperature.csv
+  441  awk '{print $2}' room-temperature.csv | awk '{print $2}'
+  442  awk '{print $2}' room-temperature.csv | awk '{print $1}'
+  443  awk '{print $2}' room-temperature.csv | awk -f "," '{print $1}'
+  444  awk '{print $2}' room-temperature.csv | awk -F "," '{print $1}'
+  445  awk '{print $2}' room-temperature.csv | awk -F "," '{print $2, $3, $4, $5}'
+  446  awk '{print $2}' room-temperature.csv | awk -F "," '{print $2, $3, $4, $5}' > 
+  447  cd ..
+  448  ./Temperatura.sh
+  449  mkdir mfsancheztarea2
+  450  cd mfsancheztarea2
+  451  gedit primerpunto.py
+  452  cd mfsancheztarea2
+  453  gedit primerpunto.py &
+  454  python primerpunto.py &
+  455  gedit segundopunto.py &
+  456  gedit Pacificosur.sh
+  457  sh Pacificosur.sh &
+  458  gedit SOI.txt
+  459  sh Pacificosur.sh &
+  460  python PCA_PacificoSur.py &
+  461  sh Pacificosur.sh &
+  462  python PCA_PacificoSur.py &
+  463  sh Pacificosur.sh &
+  464  python PCA_PacificoSur.py &
+  465  sh Pacificosur.sh &
+  466  python PCA_PacificoSur.py &
+  467  sh Pacificosur.sh &
+  468  python PCA_PacificoSur.py &
+  469  sh Pacificosur.sh &
+  470  python PCA_PacificoSur.py &
+  471  ls
+  472  cd mfsancheztarea2
+  473  python PCA_PacificoSur.py &
+  474  gedit PCA_PacificoSur.py &
+  475  python PCA_PacificoSur.py &
+  476  cd F
+  477  cd FBeron
+  478  mv 2Masas.py FBeron
+  479  ls
+  480  python 2Masas.py 
+  481  mkdir borrar
+  482  cd borrar
+  483  gedit 1.py&
+  484  ipython notebook
+  485  cd borrar
+  486  gedit 1.py&
+  487  python 1.py&
+  488  sh Pacificosur.sh
+  489  gedit PCA_PacificoSur.py
+  490  gedit PCA_PacificoSur.py &
+  491  python PCA_PacificoSur.py &
+  492  cd pythin
+  493  cd python
+  494  cd python/
+  495  phyton get-pip.py
+  496  cd
+  497  phyton get-pip.py
+  498  wget https://bootstrap.pypa.io/get-pip.py
+  499  phyton get-pip.py
+  500  python get-pip.py
+  501  cd python
+  502  cd python/
+  503  python get-pip.py
+  504  pip install jupyter
+  505  ipython notebook
+  506  cd Descargas}
+  507  cd Descargas
+  508  python JavierTellez_hw6
+  509  python JavierTellez_hw6.py
+  510  ipython notebook
+  511  python JavierTellez_hw6(1).py
+  512  python JavierTellez_hw6.py
+  513  emacs JavierTellez_hw6.py
+  514  emacs JavierTellez_hw6.py &
+  515  python JavierTellez_hw6.py
+  516  ipython notebook
+  517  python JavierTellez_hw6.py
+  518  python JavierTellez_hw6.py > xmgrace
+  519  python JavierTellez_hw6.py 
+  520  python JavierTellez_hw6.py > xmgrace
+  521  python JavierTellez_hw6.py
+  522  python JavierTellez_hw6.py>xmgrace
+  523  xmgrace
+  524  python JavierTellez_hw6.py>datos.txt
+  525  xmgrace datos.txt
+  526  gnuplot datos.txt
+  527  ipython notebook
+  528  cd Documentos/
+  529  mkdir FBeron
+  530  cd FBeron/
+  531  emacs FourierAnalysis.py &
+  532  python FourierAnalysis.py
+  533  clear
+  534  python FourierAnalysis.py
+  535  clear
+  536  python FourierAnalysis.py
+  537  clear
+  538  clear
+  539  python FourierAnalysis.py
+  540  clear
+  541  python FourierAnalysis.py
+  542  clear
+  543  python FourierAnalysis.py
+  544  python FourierAnalysis.py.
+  545  python FourierAnalysis.py
+  546  clear
+  547  python FourierAnalysis.py
+  548  python FourierAnalysis.py.
+  549  python FourierAnalysis.py
+  550  clear
+  551  python FourierAnalysis.py
+  552  clear
+  553  python FourierAnalysis.py
+  554  clear
+  555  python FourierAnalysis.py
+  556  clear
+  557  python FourierAnalysis.py
+  558  clear
+  559  python FourierAnalysis.py
+  560  clear
+  561  python FourierAnalysis.py
+  562  clear
+  563  cd
+  564  clear
+  565  ipython notebook
+  566  su markryx75
+  567  ls
+  568  ipython notebook &
+  569  ls
+  570  pwd
+  571  cd Escritorio/
+  572  ls
+  573  exit
+  574  cd Descargas
+  575  ls
+  576  python FourierAnalysis.py 
+  577  ls
+  578  cd Descargas/
+  579  ñs
+  580  ls
+  581  rm -Rf *.py
+  582  rm -Rf *.py~
+  583  ls
+  584  mkdir tallerx
+  585  cd tallerx
+  586  ipython notebook &
+  587  wget 
+  588  wget https://sicuaplus.uniandes.edu.co/bbcswebdav/pid-1812702-dt-content-rid-18895728_1/courses/201710_FISI2026_06/CircuitoRC.txt
+  589  gedit circuitoRc.txt &
+  590  vim random_walk.c
+  591  ls
+  592  mkdir Ivan
+  593  cd Ivan/
+  594  ls
+  595  vim random_walk.c
+  596  ls
+  597  cc random_walk.c -lm -o random_walk.x
+  598  vim random_walk.c
+  599  cc random_walk.c -lm -o random_walk.x
+  600  vim random_walk.c
+  601  cc random_walk.c -lm -o random_walk.x
+  602  vim random_walk.c
+  603  cc random_walk.c -lm -o random_walk.x
+  604  vim random_walk.c
+  605  cc random_walk.c -lm -o random_walk.x
+  606  ls
+  607  ./random_walk.x 
+  608  ls
+  609  vim random_walks.txt 
+  610  vim random_walk.py
+  611  python random_walk.py
+  612  ls
+  613  xdg-open rand.png 
+  614  vim random_walk.py
+  615  python random_walk.py
+  616  xdg-open rand.png 
+  617  vim random_walk.mk
+  618  ls
+  619  touch random_walk.c
+  620  ls
+  621  make random_walk.mk
+  622  vim random_walk.mk
+  623  make random_walk.mk
+  624  vim random_walk.mk
+  625  make random_walk.mk
+  626  vim random_walk.mk
+  627  make -f random_walk.mk
+  628  vim random_walk.mk
+  629  make -f random_walk.mk
+  630  vim random_walk.mk
+  631  make -f random_walk.mk
+  632  touch random_walk.c
+  633  make -f random_walk.mk
+  634  ls
+  635  ./random_walk.x 
+  636  vim random_walk.mk
+  637  ls
+  638  rm random_walks.txt
+  639  ls
+  640  rm rand.png
+  641  ls
+  642  vim random_walk.mk
+  643  make random_walk.mk
+  644  vim random_walk.mk
+  645  make random_walk.mk
+  646  ./random_walk.x 
+  647  python random_walk.py 
+  648  ls
+  649  xdg-open rand.png
+  650  git config --global user.name "Ivan Burbano"
+  651  git config --global user.email im.burbano10@uniandes.edu.co
+  652  git config --global core.editor vim
+  653  git config --list
+  654  git init
+  655  git add random_walks.py
+  656  git add random_walk.py
+  657  git add random_walk.c
+  658  git add rand.png
+  659  git status
+  660  git commit
+  661  git commit -m "Ejercicio 4"
+  662  ls
+  663  git add random_walk.mk
+  664  git commit -m "Ejercicio 4 con makefile"
+  665  ls
+  666  git remote add origin https://github.com/ivanmbur/laboratorio_metodos_computacionales.git
+  667  git push -u origin master
+  668  vim random_walk.mk 
+  669  ls
+  670  rm random_walk.x
+  671  rm random_walks.txt
+  672  ls
+  673  vim random_walk.mk 
+  674  make random_walk.mk
+  675  vim random_walk.mk 
+  676  make -f random_walk.mk
+  677  ls
+  678  xdg-open rand.png
+  679  ls
+  680  git status
+  681  git add random_walk.mk
+  682  ls
+  683  git commit -m "Ejercicio 4 con makefile modificado"
+  684  ls
+  685  git push -u master
+  686  git push origin master
+  687  xgterm &
+  688  ecl
+  689  xgterm &
+  690  ecl
+  691  ls
+  692  cd agcar3 
+  693  ls
+  694  mkiraf
+  695  xgterm &
+  696  ls
+  697  agcar0160505TBohlsen.text
+  698  ls
+  699  agcar20140525.text
+  700  ls
+  701  hd94910_20170401PaulLuckas.text
+  702  xgterm &
+  703  ls
+  704  xgterm &
+  705  ls
+  706  cd file:///var/run/media/linus/KINGSTON/estrellas listas para correr/car.tex/agcar20140525.fits
+  707  file:///var/run/media/linus/KINGSTON/estrellas listas para correr/car.tex/agcar20160505.fits
+  708  ls
+  709  gcar1.text  
+  710  cd gcar1.text  
+  711  ls
+  712  cd gcar1.text  
+  713  cd car1.text 
+  714  cd agcar1.text 
+  715  ls
+  716  mkiraf
+  717  xgterm &
+  718  ls
+  719  ecl
+  720  ecl
+  721  ecl
+  722  ls
+  723  cd normalizado 
+  724  ls
+  725  mkiraf
+  726  xgterm &
+  727  ls
+  728  d18627220100909norm.textv34120150706127norm.text
+  729  ls
+  730  v34120150706127norm.text
+  731  ls
+  732   cd /home/linus/Descargas/
+  733  ssh -Y aflorez@dzero.uniandes.edu.co
+  734  ssh -Y aflorez@dzero.uniandes.edu.co
+  735   cd /var/run/media/linus/KINGSTON
+  736   cd '/var/run/media/linus/KINGSTON/Magnetismo y materiales magneticos'
+  737   cd /var/run/media/linus/KINGSTON
+  738   cd /var/run/media/linus/KINGSTON
+  739   cd /var/run/media/linus/KINGSTON/Monografia
+  740   cd /var/run/media/linus/KINGSTON/Monografia/Adelanto
+  741   cd /var/run/media/linus/KINGSTON/Monografia/Adelanto/Presentación
+  742   cd '/var/run/media/linus/KINGSTON/Monografia/Adelanto/Avance monografía'
+  743   cd /var/run/media/linus/KINGSTON/Monografia/Adelanto/Presentación/Imagenes
+  744   cd /home
+  745   cd /var/run/media/linus/KINGSTON/Monografia/Adelanto/Presentación/Imagenes
+  746   cd /var/run/media/linus/KINGSTON
+  747   cd '/var/run/media/linus/KINGSTON/Magnetismo y materiales magneticos'
+  748   cd '/var/run/media/linus/KINGSTON/Magnetismo y materiales magneticos/Tareas'
+  749   cd '/var/run/media/linus/KINGSTON/Magnetismo y materiales magneticos'
+  750  ls
+  751  mkdir Analisis_hn
+  752  cd Analisis_hn/
+  753  ls
+  754  scp -r aflorez@dzero.uniandes.edu.co:/home/aflorez/jgonzalez/code_HN_VBF_ToTaus/Analyzer .
+  755  ls
+  756  cd Analyzer/
+  757  ls
+  758  cd ..
+  759  ls
+  760  rm -r Analyzer/
+  761  scp -r aflorez@dzero.uniandes.edu.co:/home/aflorez/jgonzalez/code_HN_VBF_ToTaus/code_analysis .
+  762  ls
+  763  exit
+  764  ls
+  765  cd
+  766  ssh -Y aflorez@dzero1.uniandes.edu.co
+  767  ls
+  768  ssh -Y aflorez@dzero1.uniandes.edu.co
+  769  exit
+  770  ls
+  771  ssh -Y aflorez@dzero.uniandes.edu.co
+  772  exit
+  773  ls
+  774  ssh -Y aflorez@dzero.uniandes.edu.co
+  775  exit
+  776  ssh compufi2
+  777  ls
+  778  cd Ivan/
+  779  ls
+  780  vim numpy_statistics.py
+  781  ls
+  782  ssh -Y aflorez@dzero1.uniandes.edu.co
+  783  exit
+  784  ls
+  785  ssh -Y aflorez@dzero.uniandes.edu.co
+  786  screen -Y aflorez@dzero.uniandes.edu.co
+  787  ssh -Y aflorez@dzero.uniandes.edu.co
+  788  exit
+  789  ipython notebook
+  790  ls
+  791  cd Descargas/
+  792  ls
+  793  whoami
+  794  top
+  795  clear
+  796  ls
+  797  pwd
+  798  ls -a
+  799  ls -lt
+  800  man ls
+  801  ls *.pdf
+  802  ls a*
+  803  ls tarea1/*
+  804  mkdir DavidMC
+  805  ls David*
+  806  ls DavidMC/
+  807  mdir DavidMC/Clase1
+  808  mkdir DavidMC/Clase1
+  809  ls DavidMC
+  810  ls David
+  811  clear
+  812  cd DavidMC
+  813  ls
+  814  pwd
+  815  cd.. 
+  816  cd
+  817  pwd
+  818  cd DavidMC/
+  819  rmdir Clase1/
+  820  ls
+  821  mkdir prueba
+  822  mkdir prueba/prueba1
+  823  ls
+  824  cd prueba
+  825  ls
+  826  cd..
+  827  rmdir prueba
+  828  rmdir -r prueba
+  829  ls
+  830  rmdir -r prueba
+  831  ls
+  832  rmdir-r prueba
+  833  clear
+  834  ls
+  835  man rmdir
+  836  clear
+  837  ls
+  838  rmdir prueba/prueba1
+  839  rmdir prueba
+  840  mkdir Clase1
+  841  cd Clase1
+  842  touch file.txt
+  843  ls
+  844  gedit file.txt
+  845  ls
+  846  less file.txt
+  847  touch file2.txt
+  848  ls
+  849  ls -lt
+  850  touch file.txt
+  851  ls -lt
+  852  mv file.txt file3.txt
+  853  ls
+  854  mv file3.txt file2.txt
+  855  ls
+  856  mv file2.txt ../
+  857  ls
+  858  cd..
+  859  ls
+  860  cp file2.txt file3.txt
+  861  mv file3.txt Clase1
+  862  ls
+  863  cd Clase1
+  864  ls
+  865  rm file3.txt
+  866  ls
+  867  touch file3.txt
+  868  ls
+  869  cd..
+  870  tar -cvf Clase1.tar Clase1
+  871  ls
+  872  tar -xvf Clase1.tar
+  873  ls
+  874  gedit file2.txt
+  875  gedit file2.txt &
+  876  ls
+  877  less file2.txt
+  878  head file2.txt
+  879  less file2.txt
+  880  tail file2.txt
+  881  mv file2.txt file.txt
+  882  ls
+  883  less file.txt
+  884  tail file.txt
+  885  cp file.txt Clase1
+  886  ls
+  887  rm file2.txt~
+  888  ls
+  889  less file.txt
+  890  rm Clase1.tar
+  891  ls
+  892  cd Clase1
+  893  ls
+  894  rm file3.txt
+  895  less file.txt
+  896  cd.
+  897  cd..
+  898  ls
+  899  fless file.txt
+  900  less file.txt
+  901  clear
+  902  ls
+  903  cp file.txt file2.txt
+  904  ls
+  905  cat file.txt file2.txt
+  906  tac file.txt file2.tx
+  907  clear
+  908  cat file.txt file2.txt
+  909  tac file.txt file2.txt
+  910  grep Gedit file.txt
+  911  grep arch file.txt
+  912  grep Arch file.txt
+  913  wc file.txt
+  914  grep -i arch file.txt
+  915  awk '{print $1, $2;}' file.txt
+  916  wget https://github.com/ComputoCienciasUniandes/MetodosComputacionales/blob/master/hands_on/unix/list_columns.txt
+  917  ls
+  918  mv list_columns.txt Clase1
+  919  ls
+  920  rm file2.txt
+  921  ls
+  922  Clase1
+  923  cd clase1
+  924  cd Clase1
+  925  ls
+  926  clear
+  927  ls
+  928  awk '{if($2=="Bogota")print $0}' list_columns.txt
+  929  ls
+  930  less list_columns.txt
+  931  rm list_columns
+  932  rm list_columns.txt
+  933  ls
+  934  wget https://raw.githubusercontent.com/ComputoCienciasUniandes/MetodosComputacionales/master/hands_on/unix/list_columns.txt
+  935  less list_columns.txt
+  936  awk '{if($2=="Bogota")print $0}' list_columns.txt
+  937  awk '{if($3<25)print $0, $1;}'
+  938  awk '{if($3<25)print $0, $1;}' list_columns.txt
+  939  Clear
+  940  clear
+  941  awk '{if($3<25)print $0, $1;}' list_columns.txt
+  942  awk '{if($2=="Bogota")print $0}' list_columns.txt
+  943  awk '{if($3>25)print $0, $1;}' list_columns.txt
+  944  awk '{if($3>25)print $1;}' list_columns.txt
+  945  awk '{if($3<25)print $1;}' list_columns.txt
+  946  awk '{if($2=="Cali")print $1}' list_columns.txt
+  947  awk '{if($2=="Cali")print $4}' list_columns.txt
+  948  awk '{if($2=="Cali")print $5}' list_columns.txt
+  949   cd /
+  950   cd /home/linus/Escritorio/mendeleydesktop-1.16.3-linux-x86_64
+  951  tocuh matematicas.sh
+  952  touch matematicas.sh
+  953  gedit matematicas.sh
+  954  clear
+  955  wget https://raw.githubusercontent.com/ComputoCienciasUniandes/HerramientasComputacionalesDatos/master/Homework/hw1/01_notas.tsv
+  956  less notas.ts
+  957  ls
+  958  less notas.tsv
+  959  clc
+  960  ls
+  961  mkdir semana1
+  962  cd semana1
+  963  wget https://raw.githubusercontent.com/ComputoCienciasUniandes/HerramientasComputacionalesDatos/master/Homework/hw1/01_notas.tsv
+  964  less 01_notas.tsv
+  965  emacs matematicas&
+  966  wc 01_notas.tsv 
+  967  shmode +x matematicas.sh
+  968  wget https://raw.githubusercontent.com/ComputoCienciasUniandes/HerramientasComputacionalesDatos/master/Homework/hw1/01_notas.tsv
+  969  awk '{if((($4+$5+$6)/3>=3)&&($3==MATEMA))print $1,$2}' 01_notas.tsv
+  970  awk '{if((($4+$5+$6)/3>=3)&&($3=="MATEMA"))print ($1,$2);}' 01_notas.tsv
+  971  awk '{if((($4+$5+$6)/3>=3)&&($3=="MATEMA"))print ($1,$2);}' 01_notas.tsv > pasaron.txt
+  972  ls
+  973  less pasaron.txt
+  974  ./matematicas.sh
+  975  chmod
+  976  man chmod
+  977  chmod +x matematicas.sh
+  978  ./ matematicas.sh
+  979  ./matematicas.sh
+  980  sudo ./matematicas.sh
+  981  q
+  982  man sudo
+  983  man wc
+  984  wc -l 01_notas.tsv 
+  985  man wc
+  986  wc -c 01_notas.tsv 
+  987  wc -w 01_notas.tsv 
+  988  man wc
+  989  wc -L 01_notas.tsv 
+  990  gedit matematicas.sh
+  991  ./matematicas.sh
+  992  less pasaron.txt
+  993  gedit matematicas.sh
+  994  clear
+  995  man chmode
+  996  man ch
+  997  man chmode
+  998  man chmod
+  999  ls
+ 1000  mkdir tarod13
+ 1001  cd tarod13
+ 1002  ls
+ 1003  touch file.txt
+ 1004  ls
+ 1005  move file.txt file1.txt
+ 1006  mv file.txt file1.txt
+ 1007  ls
+ 1008  open file1.txt
+ 1009  touch file2.txt
+ 1010  cp file1.txt file.txt
+ 1011  ls
+ 1012  ls -lt
+ 1013  man ls
+ 1014  touch file2.txt
+ 1015  ls -lt
+ 1016  pwd
+ 1017  tar -cvf compressed.tar file1
+ 1018  tar -cvf compressed.tar file1.txt
+ 1019  ls
+ 1020  rm file1.txt
+ 1021  ls
+ 1022  tar -xvf compressed.tar
+ 1023  ls
+ 1024  gedit file.txt
+ 1025  gedit file.txt &
+ 1026  cat file.txt file4.txt
+ 1027  grep Forero file.txt
+ 1028  less file.txt
+ 1029  head file.txt
+ 1030  grep Forero -ir
+ 1031  wget https://raw.githubusercontent.com/ComputoCienciasUniandes/MetodosComputacionales/master/hands_on/unix/list_columns.txt
+ 1032  ls
+ 1033  awk '{print $1,$2;}' list_columns.txt 
+ 1034  awk '{print $1}' list_columns.txt 
+ 1035  awk '{print $1,$2}' list_columns.txt 
+ 1036  awk '{if($3>30)print $0}' list_columns.txt 
+ 1037  awk '{if($3>30)print $1}' list_columns.txt 
+ 1038  awk '{if($3>30)print $2}' list_columns.txt 
+ 1039  awk '{if($3>30)print $3}' list_columns.txt 
+ 1040  awk '{if($3>30)print $4}' list_columns.txt 
+ 1041  awk '{if($3>30)print $1,$4}' list_columns.txt 
+ 1042  awk '{if($3>30)print $1$4}' list_columns.txt 
+ 1043  awk '{if($3>30)print $1;$4}' list_columns.txt 
+ 1044  awk '{if($3>30)print $1,$3}' list_columns.txt 
+ 1045  mkdir comprimidos
+ 1046  ls *.tar
+ 1047  mv *.tar comprimidos
+ 1048  ls
+ 1049  wget https://github.com/ComputoCienciasUniandes/MetodosComputacionales/blob/master/hands_on/unix/20130124_compufisica.txt
+ 1050  ls
+ 1051  top
+ 1052  history
+ 1053  gedit file2.txt
+ 1054  head file2.txt
+ 1055  emacs new_file.txt
+ 1056  emacs file2.txt
+ 1057  $python metodos1.py
+ 1058  $ python metodos1.py
+ 1059  python metodos1.py
+ 1060  python
+ 1061  python metodos1.py
+ 1062  touch metodos1.py
+ 1063  emacs metodos1.py
+ 1064  python metodos1.py
+ 1065  python
+ 1066  history
+linus@compufi12:~/tarod13> ^C
+linus@compufi12:~/tarod13> gedit file2.txt
+warning: line 6432: incompatible stripping characters and condition
+warning: line 6444: incompatible stripping characters and condition
+warning: line 6432: incompatible stripping characters and condition
+warning: line 6444: incompatible stripping characters and condition
+
+(gedit:18465): Gtk-WARNING **: Calling Inhibit failed: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.SessionManager was not provided by any .service files
+
+(gedit:18465): Gtk-WARNING **: Calling Inhibit failed: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.SessionManager was not provided by any .service files
+linus@compufi12:~/tarod13> 

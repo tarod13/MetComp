@@ -1,0 +1,70 @@
+  999  ls
+ 1000  mkdir tarod13
+ 1001  cd tarod13
+ 1002  ls
+ 1003  touch file.txt
+ 1004  ls
+ 1005  move file.txt file1.txt
+ 1006  mv file.txt file1.txt
+ 1007  ls
+ 1008  open file1.txt
+ 1009  touch file2.txt
+ 1010  cp file1.txt file.txt
+ 1011  ls
+ 1012  ls -lt
+ 1013  man ls
+ 1014  touch file2.txt
+ 1015  ls -lt
+ 1016  pwd
+ 1017  tar -cvf compressed.tar file1
+ 1018  tar -cvf compressed.tar file1.txt
+ 1019  ls
+ 1020  rm file1.txt
+ 1021  ls
+ 1022  tar -xvf compressed.tar
+ 1023  ls
+ 1024  gedit file.txt
+ 1025  gedit file.txt &
+ 1026  cat file.txt file4.txt
+ 1027  grep Forero file.txt
+ 1028  less file.txt
+ 1029  head file.txt
+ 1030  grep Forero -ir
+ 1031  wget https://raw.githubusercontent.com/ComputoCienciasUniandes/MetodosComputacionales/master/hands_on/unix/list_columns.txt
+ 1032  ls
+ 1033  awk '{print $1,$2;}' list_columns.txt 
+ 1034  awk '{print $1}' list_columns.txt 
+ 1035  awk '{print $1,$2}' list_columns.txt 
+ 1036  awk '{if($3>30)print $0}' list_columns.txt 
+ 1037  awk '{if($3>30)print $1}' list_columns.txt 
+ 1038  awk '{if($3>30)print $2}' list_columns.txt 
+ 1039  awk '{if($3>30)print $3}' list_columns.txt 
+ 1040  awk '{if($3>30)print $4}' list_columns.txt 
+ 1041  awk '{if($3>30)print $1,$4}' list_columns.txt 
+ 1042  awk '{if($3>30)print $1$4}' list_columns.txt 
+ 1043  awk '{if($3>30)print $1;$4}' list_columns.txt 
+ 1044  awk '{if($3>30)print $1,$3}' list_columns.txt 
+ 1045  mkdir comprimidos
+ 1046  ls *.tar
+ 1047  mv *.tar comprimidos
+ 1048  ls
+ 1049  wget https://github.com/ComputoCienciasUniandes/MetodosComputacionales/blob/master/hands_on/unix/20130124_compufisica.txt
+ 1050  ls
+ 1051  top
+ 1052  history
+ 1053  gedit file2.txt
+ 1054  head file2.txt
+ 1055  emacs new_file.txt
+ 1056  emacs file2.txt
+ 1057  $python metodos1.py
+ 1058  $ python metodos1.py
+ 1059  python metodos1.py
+ 1060  python
+ 1061  python metodos1.py
+ 1062  touch metodos1.py
+ 1063  emacs metodos1.py
+ 1064  python metodos1.py
+ 1065  python
+ 1066  history
+
+
