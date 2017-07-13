@@ -18,7 +18,7 @@ struct 	SistemaSolar {
 char* obtener_columna(char* linea, int numero_columna)
 {
     char* token;
-    //strtok divide al string linea y retorna el puntero de la primera substring
+    //strtok divide al string linea y retorna el puntero del primer substring
     for (token = strtok(linea, ","); token && *token; token = strtok(NULL, ",\n"))	
     {
         if (!--numero_columna)
@@ -36,15 +36,17 @@ int main(){
 	char* linea[1024];
 	for(int i = 1;i<9;i++){
 		if(i == 1){
-		while (fgets(linea, 1024, archivo))
-		{
-			//strdup copia al string linea y lo guarda en memoria, retornando la ubicacion de la copia
-		    char* copia_linea = strdup(linea);
-		    strcpy( sistema_solar.planetas, obtener_columna(copia_linea, 1));
-		    free(copia_linea);
-		}    
-		fclose(archivo);
+
+		    while (fgets(linea, 1024, archivo)){
+			    //strdup copia al string linea y lo guarda en memoria, retornando la ubicacion de la copia
+		        char* copia_linea = strdup(linea);
+		        nombres_planetas = obtener_columna(copia_linea, 1);
+		        free(copia_linea);
+		    }
+    
+		    fclose(archivo);
 		}
     }
+
     return 0;
 }
