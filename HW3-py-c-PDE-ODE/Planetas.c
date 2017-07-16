@@ -3,15 +3,15 @@
 #include <string.h>
 #include <math.h>
 
-#define n_puntos 4096
-#define t_sim 67108864
-#define n_temp 2
+#define n_puntos 10000
+#define t_sim 1000000
+#define n_temp 3
 #define n_astros 10
 #define n_dim 3
 #define runge_kutta_n 4
 #define n_columnas 8
 
-const float G = 1.99350e-44;
+const float G = 1.98529e-29;
 
 typedef struct{	
 	char 	nombre[15];
@@ -70,6 +70,7 @@ void inicializar_sistema(SistemaSolar* apuntador_sisSolar, char* nombre_archivo)
     fclose(archivo);    
 }
 
+/*
 void calculo_velocidad(SistemaSolar* apuntador_sisSolar, float** dv, int t){
 	for(int i=0;i<n_dim;i++)
 		for(int j=0;j<n_astros;j++) 	
@@ -96,20 +97,19 @@ void calculo_aceleracion(SistemaSolar* apuntador_sisSolar, float** dx, int t){
 }
 
 void runge_kutta_4(SistemaSolar* apuntador_sisSolar, float dt){
-	int t_guardado = 0;
-	int paso = t_sim/n_puntos;
+	int t, tmod0, tmod1, t_guardado = 0, paso = t_sim/n_puntos;
 	float** dx = (float **)malloc(n_dim * sizeof(float*));
 	for(int m=0;m<n_dim;m++) dx[m] = (float *)malloc(n_astros * sizeof(float));
 	float** dv = (float **)malloc(n_dim * sizeof(float*));
 	for(int m=0;m<n_dim;m++) dv[m] = (float *)malloc(n_astros * sizeof(float));
+	float k1[runge_kutta_n][n_dim][n_astros], k2[runge_kutta_n][n_dim][n_astros];
+	
 	printf("Calculando trayectorias..\n");
-	for(int t=1;t<t_sim;t++){
-		int tmod0 = (t-1) % n_temp;
-		int tmod1 = t % n_temp;
+	for(t=1;t<t_sim;t++){
+		tmod0 = (t-1) % n_temp;
+		tmod1 = t % n_temp;
 		if(t % paso == 0)	
-			t_guardado++;		
-		
-		float k1[runge_kutta_n][n_dim][n_astros], k2[runge_kutta_n][n_dim][n_astros];
+			t_guardado++;	
 				
 		for(int i=0;i<n_astros;i++)
 			for(int h=0;h<n_dim;h++){			
@@ -157,6 +157,72 @@ void runge_kutta_4(SistemaSolar* apuntador_sisSolar, float dt){
 	free(dx);
 	free(dv);	
 }
+*/
+
+void calculo_velocidad(SistemaSolar* apuntador_sisSolar, int t){
+	for(int i=0;i<n_dim;i++)
+		for(int j=0;j<n_astros;j++) 	
+			(*apuntador_sisSolar).velocidad[i][j] = (*apuntador_sisSolar).astros[j].velocidad_temp[i][t];	
+}
+
+void calculo_aceleracion(SistemaSolar* apuntador_sisSolar, int t){	
+	for(int i=0;i<n_dim;i++)
+		for(int j=0;j<n_astros;j++){
+			(*apuntador_sisSolar).posicion[i][j] = (*apuntador_sisSolar).astros[j].posicion_temp[i][t];
+			(*apuntador_sisSolar).aceleracion[i][j] = 0.0;
+		}
+	for(int j=0;j<n_astros;j++)		
+		for(int k=0;k<n_astros;k++)
+			if(j!=k){
+				float r_jk[n_dim] = {(*apuntador_sisSolar).posicion[0][k]-(*apuntador_sisSolar).posicion[0][j],
+									(*apuntador_sisSolar).posicion[1][k]-(*apuntador_sisSolar).posicion[1][j],
+									(*apuntador_sisSolar).posicion[2][k]-(*apuntador_sisSolar).posicion[2][j]};
+				float d = sqrt(r_jk[0]*r_jk[0] + r_jk[1]*r_jk[1] + r_jk[2]*r_jk[2]);
+				float c = G*(*apuntador_sisSolar).astros[k].masa/(d*d*d);
+				for(int h=0;h<n_dim;h++) 
+					(*apuntador_sisSolar).aceleracion[h][j] += c*r_jk[h];			
+			}	
+}
+
+void leap_frog(SistemaSolar* apuntador_sisSolar, float dt){
+	int t, tmod0, tmod1, tmod2, t_guardado = 0, paso = t_sim/n_puntos;
+	
+	// Se calcula la posicion y velocidad en el instante 1, por medio del metodo de euler 
+	calculo_velocidad(apuntador_sisSolar, 0);
+	calculo_aceleracion(apuntador_sisSolar, 0);	
+	for(int i=0;i<n_astros;i++)
+		for(int h=0;h<n_dim;h++){
+			(*apuntador_sisSolar).astros[i].posicion_temp[h][1] = 
+				(*apuntador_sisSolar).astros[i].posicion_temp[h][0] + dt*(*apuntador_sisSolar).velocidad[h][i];
+			(*apuntador_sisSolar).astros[i].velocidad_temp[h][1] = 
+				(*apuntador_sisSolar).astros[i].velocidad_temp[h][0] + dt*(*apuntador_sisSolar).aceleracion[h][i];					
+			}		
+	
+	printf("Calculando trayectorias..\n");
+	for(t=2;t<t_sim;t++){
+		tmod0 = (t-2) % n_temp;
+		tmod1 = (t-1) % n_temp;
+		tmod2 = t % n_temp;
+		if(t % paso == 0)	
+			t_guardado++;	
+				
+		calculo_velocidad(apuntador_sisSolar, tmod1);
+		calculo_aceleracion(apuntador_sisSolar, tmod1);
+		
+		for(int i=0;i<n_astros;i++)
+			for(int h=0;h<n_dim;h++){
+				(*apuntador_sisSolar).astros[i].posicion_temp[h][tmod2] = 
+					(*apuntador_sisSolar).astros[i].posicion_temp[h][tmod0] + 2*dt*(*apuntador_sisSolar).velocidad[h][i];					
+				(*apuntador_sisSolar).astros[i].velocidad_temp[h][tmod2] = 
+					(*apuntador_sisSolar).astros[i].velocidad_temp[h][tmod0] +  2*dt*(*apuntador_sisSolar).aceleracion[h][i];
+				if(t % paso == 0){
+					(*apuntador_sisSolar).astros[i].posicion[h][t_guardado] = (*apuntador_sisSolar).astros[i].posicion_temp[h][tmod2];					
+					(*apuntador_sisSolar).astros[i].velocidad[h][t_guardado] = (*apuntador_sisSolar).astros[i].velocidad_temp[h][tmod2];
+				}
+			}									
+	}	
+}
+
 
 void exportar_trayectoria(SistemaSolar* apuntador_sisSolar, char* nombre_archivo){
 	printf("Exportando trayectorias..\n");
@@ -176,11 +242,13 @@ void exportar_trayectoria(SistemaSolar* apuntador_sisSolar, char* nombre_archivo
 int main(){	
 	char nombre_archivo_lectura[30] = "coordinates.csv";
 	SistemaSolar sisSolar;
-	float dt = 0.000001;
+	//float dt_rk = 1e-7;
+	float dt_lf = 1e-3;
 	char nombre_archivo_escritura[30] = "trayectorias.csv";
 	
 	inicializar_sistema(&sisSolar, nombre_archivo_lectura);
-    runge_kutta_4(&sisSolar, dt);
+    //runge_kutta_4(&sisSolar, dt_rk);
+    leap_frog(&sisSolar, dt_lf);
     exportar_trayectoria(&sisSolar, nombre_archivo_escritura);   
     printf("Proceso terminado.\n");
     	
