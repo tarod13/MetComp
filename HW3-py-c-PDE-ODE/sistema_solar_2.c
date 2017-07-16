@@ -3,7 +3,9 @@
 #include <string.h>
 #include <math.h>
 
-#define t_sim 32768
+#define n_puntos 4096
+#define t_sim 67108864
+#define n_temp 2
 #define n_astros 10
 #define n_dim 3
 #define runge_kutta_n 4
@@ -14,12 +16,17 @@ const float G = 1.99350e-44;
 typedef struct{	
 	char 	nombre[15];
 	float	masa;
-   	float	posicion[n_dim][t_sim];
-   	float	velocidad[n_dim][t_sim];   	
+   	float	posicion[n_dim][n_puntos];
+   	float	velocidad[n_dim][n_puntos];
+   	float	posicion_temp[n_dim][n_temp];
+   	float	velocidad_temp[n_dim][n_temp];   	
 } Astro;
 
 typedef struct{
-	Astro astros[n_astros];   
+	Astro astros[n_astros];
+	float posicion[n_dim][n_astros];
+	float velocidad[n_dim][n_astros];
+	float aceleracion[n_dim][n_astros];   
 } SistemaSolar;
 
 char* obtener_columna(char* linea, int columna){    
@@ -49,10 +56,12 @@ void inicializar_sistema(SistemaSolar* apuntador_sisSolar, char* nombre_archivo)
 		    	case 1: (*apuntador_sisSolar).astros[astro_id].masa = strtod(dato,NULL); break;
 		    	case 2: 
 		    	case 3: 
-		    	case 4: (*apuntador_sisSolar).astros[astro_id].posicion[columna-2][0] = strtod(dato,NULL); break;
+		    	case 4: (*apuntador_sisSolar).astros[astro_id].posicion[columna-2][0] = strtod(dato,NULL);
+		    		(*apuntador_sisSolar).astros[astro_id].posicion_temp[columna-2][0] = strtod(dato,NULL); break;
 		    	case 5: 
 		    	case 6: 
-		    	case 7: (*apuntador_sisSolar).astros[astro_id].velocidad[columna-5][0] = strtod(dato,NULL); break;		    	
+		    	case 7: (*apuntador_sisSolar).astros[astro_id].velocidad[columna-5][0] = strtod(dato,NULL); 
+		    		(*apuntador_sisSolar).astros[astro_id].velocidad_temp[columna-5][0] = strtod(dato,NULL); break;		    	
 		    }
 		    free(copia_linea);		    		    	    
     	}    	    	
@@ -61,47 +70,45 @@ void inicializar_sistema(SistemaSolar* apuntador_sisSolar, char* nombre_archivo)
     fclose(archivo);    
 }
 
-float** calculo_velocidad(SistemaSolar* apuntador_sisSolar, float** dv, int t){
-	float** vel = (float **)malloc(n_dim * sizeof(float*));
-	for(int m=0;m<n_dim;m++) vel[m] = (float *)malloc(n_astros * sizeof(float));
-	
+void calculo_velocidad(SistemaSolar* apuntador_sisSolar, float** dv, int t){
 	for(int i=0;i<n_dim;i++)
 		for(int j=0;j<n_astros;j++) 	
-			vel[i][j] = (*apuntador_sisSolar).astros[j].velocidad[i][t] + dv[i][j];	
-	return vel;
+			(*apuntador_sisSolar).velocidad[i][j] = (*apuntador_sisSolar).astros[j].velocidad_temp[i][t] + dv[i][j];	
 }
 
-float** calculo_aceleracion(SistemaSolar* apuntador_sisSolar, float** dx, int t){
-	float** pos = (float **)malloc(n_dim * sizeof(float*));
-	for(int m=0;m<n_dim;m++) pos[m] = (float *)malloc(n_astros * sizeof(float));
-	float** acel = (float **)malloc(n_dim * sizeof(float*));
-	for(int m=0;m<n_dim;m++) acel[m] = (float *)malloc(n_astros * sizeof(float));
-	
+void calculo_aceleracion(SistemaSolar* apuntador_sisSolar, float** dx, int t){	
 	for(int i=0;i<n_dim;i++)
 		for(int j=0;j<n_astros;j++){
-			pos[i][j] = (*apuntador_sisSolar).astros[j].posicion[i][t] + dx[i][j];
-			acel[i][j] = 0.0;
+			(*apuntador_sisSolar).posicion[i][j] = (*apuntador_sisSolar).astros[j].posicion_temp[i][t] + dx[i][j];
+			(*apuntador_sisSolar).aceleracion[i][j] = 0.0;
 		}
 	for(int j=0;j<n_astros;j++)		
 		for(int k=0;k<n_astros;k++)
 			if(j!=k){
-				float r_jk[n_dim] = {pos[0][k]-pos[0][j],pos[1][k]-pos[1][j],pos[2][k]-pos[2][j]};
+				float r_jk[n_dim] = {(*apuntador_sisSolar).posicion[0][k]-(*apuntador_sisSolar).posicion[0][j],
+									(*apuntador_sisSolar).posicion[1][k]-(*apuntador_sisSolar).posicion[1][j],
+									(*apuntador_sisSolar).posicion[2][k]-(*apuntador_sisSolar).posicion[2][j]};
 				float d = sqrt(r_jk[0]*r_jk[0] + r_jk[1]*r_jk[1] + r_jk[2]*r_jk[2]);
 				float c = G*(*apuntador_sisSolar).astros[k].masa/(d*d*d);
 				for(int h=0;h<n_dim;h++) 
-					acel[h][j] += c*r_jk[h];			
-			}
-		
-	return acel; 
+					(*apuntador_sisSolar).aceleracion[h][j] += c*r_jk[h];			
+			}	
 }
 
 void runge_kutta_4(SistemaSolar* apuntador_sisSolar, float dt){
+	int t_guardado = 0;
+	int paso = t_sim/n_puntos;
+	float** dx = (float **)malloc(n_dim * sizeof(float*));
+	for(int m=0;m<n_dim;m++) dx[m] = (float *)malloc(n_astros * sizeof(float));
+	float** dv = (float **)malloc(n_dim * sizeof(float*));
+	for(int m=0;m<n_dim;m++) dv[m] = (float *)malloc(n_astros * sizeof(float));
 	printf("Calculando trayectorias..\n");
 	for(int t=1;t<t_sim;t++){
-		float** dx = (float **)malloc(n_dim * sizeof(float*));
-		for(int m=0;m<n_dim;m++) dx[m] = (float *)malloc(n_astros * sizeof(float));
-		float** dv = (float **)malloc(n_dim * sizeof(float*));
-		for(int m=0;m<n_dim;m++) dv[m] = (float *)malloc(n_astros * sizeof(float));
+		int tmod0 = (t-1) % n_temp;
+		int tmod1 = t % n_temp;
+		if(t % paso == 0)	
+			t_guardado++;		
+		
 		float k1[runge_kutta_n][n_dim][n_astros], k2[runge_kutta_n][n_dim][n_astros];
 				
 		for(int i=0;i<n_astros;i++)
@@ -110,11 +117,9 @@ void runge_kutta_4(SistemaSolar* apuntador_sisSolar, float dt){
 				dv[h][i] = 0.0;
 			}
 			
-		float **vel, **acel;
-		
 		for(int m=0;m<runge_kutta_n;m++){
-			vel = calculo_velocidad(apuntador_sisSolar, dv, t-1);
-			acel = calculo_aceleracion(apuntador_sisSolar, dx, t-1);
+			calculo_velocidad(apuntador_sisSolar, dv, tmod0);
+			calculo_aceleracion(apuntador_sisSolar, dx, tmod0);
 			float coef;
 			switch(m){
 				case 0: coef = 1.0/2.0; break;
@@ -124,8 +129,8 @@ void runge_kutta_4(SistemaSolar* apuntador_sisSolar, float dt){
 			}			 
 			for(int i=0;i<n_astros;i++)
 				for(int h=0;h<n_dim;h++){
-					k1[m][h][i] = dt*vel[h][i];
-					k2[m][h][i] = dt*acel[h][i];
+					k1[m][h][i] = dt*(*apuntador_sisSolar).velocidad[h][i];
+					k2[m][h][i] = dt*(*apuntador_sisSolar).aceleracion[h][i];
 					dx[h][i] = coef*k1[m][h][i];
 					dv[h][i] = coef*k2[m][h][i]; 
 				}
@@ -133,14 +138,24 @@ void runge_kutta_4(SistemaSolar* apuntador_sisSolar, float dt){
 		
 		for(int i=0;i<n_astros;i++)
 			for(int h=0;h<n_dim;h++){
-				(*apuntador_sisSolar).astros[i].posicion[h][t] = 
-					(*apuntador_sisSolar).astros[i].posicion[h][t-1] + 
+				(*apuntador_sisSolar).astros[i].posicion_temp[h][tmod1] = 
+					(*apuntador_sisSolar).astros[i].posicion_temp[h][tmod0] + 
 					(k1[0][h][i]+2*k1[1][h][i]+2*k1[2][h][i]+k1[3][h][i])/6.0;
-				(*apuntador_sisSolar).astros[i].velocidad[h][t] = 
-					(*apuntador_sisSolar).astros[i].velocidad[h][t-1] + 
+				(*apuntador_sisSolar).astros[i].velocidad_temp[h][tmod1] = 
+					(*apuntador_sisSolar).astros[i].velocidad_temp[h][tmod0] + 
 					(k2[0][h][i]+2*k2[1][h][i]+2*k2[2][h][i]+k1[3][h][i])/6.0;
-			}				
+				if(t % paso == 0){
+					(*apuntador_sisSolar).astros[i].posicion[h][t_guardado] = 
+						(*apuntador_sisSolar).astros[i].posicion_temp[h][tmod0] + 
+						(k1[0][h][i]+2*k1[1][h][i]+2*k1[2][h][i]+k1[3][h][i])/6.0;
+					(*apuntador_sisSolar).astros[i].velocidad[h][t_guardado] = 
+						(*apuntador_sisSolar).astros[i].velocidad_temp[h][tmod0] + 
+						(k2[0][h][i]+2*k2[1][h][i]+2*k2[2][h][i]+k1[3][h][i])/6.0;					
+				}
+			}									
 	}
+	free(dx);
+	free(dv);	
 }
 
 void exportar_trayectoria(SistemaSolar* apuntador_sisSolar, char* nombre_archivo){
@@ -149,7 +164,7 @@ void exportar_trayectoria(SistemaSolar* apuntador_sisSolar, char* nombre_archivo
 	for(int astro_id=0;astro_id<n_astros-1;astro_id++)
 		fprintf(archivo, "%s,", (*apuntador_sisSolar).astros[astro_id].nombre);
 	fprintf(archivo, "%s\n", (*apuntador_sisSolar).astros[n_astros-1].nombre);
-	for(int t=0;t<t_sim;t++)
+	for(int t=0;t<n_puntos;t++)
 		for(int h=0;h<n_dim;h++){
 			for(int astro_id=0;astro_id<n_astros-1;astro_id++)			
 				fprintf(archivo, "%f,", (*apuntador_sisSolar).astros[astro_id].posicion[h][t]);
