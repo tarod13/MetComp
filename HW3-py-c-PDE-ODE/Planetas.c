@@ -3,8 +3,8 @@
 #include <string.h>
 #include <math.h>
 
-#define n_puntos 10000
-#define t_sim 1000000
+#define n_puntos 2000
+#define t_sim 300000
 #define n_temp 3
 #define n_astros 10
 #define n_dim 3
