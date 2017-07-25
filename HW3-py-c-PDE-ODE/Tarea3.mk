@@ -17,3 +17,4 @@ trayectorias.csv : Planetas.x
 
 Planetas.x : Planetas.c
 	cc Planetas.c -lm -o Planetas.x
+	#cc Planetas.c -lm -o -02 Planetas.x
