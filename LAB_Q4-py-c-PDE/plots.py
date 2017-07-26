@@ -9,8 +9,7 @@ xfin = 2
 x = np.linspace(0,xfin,n_puntos_x)
 
 fig1, ax1 = plt.subplots(2,1)
-ax1[0].set_xlabel(r'$x$ (UA)', size = 9)
-ax1[1].set_xlabel(r'$x$ (UA)', size = 9)
+ax1[1].set_xlabel(r'$x$', size = 9)
 ax1[0].set_ylabel(r'$u(x,0)$', size = 9)
 ax1[1].set_ylabel(r'$u(x,0.3)$', size = 9)
 ax1[0].tick_params(labelsize = 8)

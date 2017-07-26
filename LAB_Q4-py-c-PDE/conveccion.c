@@ -9,7 +9,7 @@
 #define tfin        0.3
 #define dt          (double)tfin/(double)(n_puntos_t-1)
 #define dx          (double)xfin/(double)(n_puntos_x-1)
-#define gamma       (double)(c*dt)/(double)dx
+#define gamma       ((double)(c*dt))/((double)dx)
 
 double** crear_matriz();
 void condicion_inicial(double** u);
@@ -20,6 +20,7 @@ void liberar_matriz(double** u);
 int main() {
   char nombre_archivo[20] = "conveccion.csv";
   double** u = crear_matriz();
+  printf("%f,%f,%f\n",dt,dx,gamma);
   condicion_inicial(u);
   evolucion(u);
   guardar_matriz(u, nombre_archivo);
