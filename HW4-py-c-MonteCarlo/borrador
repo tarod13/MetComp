@@ -1,0 +1,132 @@
+int* buscar_nueva_posicion_n(int x, int y, double* lista_normal){
+  int rand_id_x, rand_id_y;
+  double dx, dy;
+  int* nueva_pos = malloc(2*sizeof(int));
+
+  do {
+    rand_id_x = (int)rand_rango(0,n_puntos_dn);
+    rand_id_y = (int)rand_rango(0,n_puntos_dn);
+    dx = lista_normal[rand_id_x];
+    dy = lista_normal[rand_id_y];
+
+    if((int)(x+dx) >= n_columnas){
+      nueva_pos[0] = ((int)(x+dx))%n_columnas;
+    }
+    else if ((int)(x+dx) < 0){
+      nueva_pos[0] = n_columnas + ((int)(x+dx))%n_columnas;
+    }
+    else {
+      nueva_pos[0] =(int)(x+dx);
+    }
+    if((int)(y+dy) >= n_filas){
+      nueva_pos[1] = n_filas - ((int)(y+dy))%n_filas;
+      if(nueva_pos[0] >= n_columnas/2.0)
+        nueva_pos[0] -= (int)(n_columnas/2);
+      else
+        nueva_pos[0] += (int)(n_columnas/2);
+    }
+    else if ((int)(y+dy) < 0){
+      nueva_pos[1] = (-((int)(y+dy)))%n_filas;
+      if(nueva_pos[0] >= n_columnas/2.0)
+        nueva_pos[0] -= (int)(n_columnas/2);
+      else
+        nueva_pos[0] += (int)(n_columnas/2);
+    }
+    else {
+      nueva_pos[1] = (int)(y+dy);
+    }
+  } while(x==nueva_pos[0] && y==nueva_pos[1]);
+
+  return nueva_pos;
+}
+int* buscar_nueva_posicion_u(int x, int y, double radio){
+  double dx, dy;
+  int* nueva_pos = malloc(2*sizeof(int));
+
+  do {
+    dx = rand_rango(-radio,2.0*radio);
+    dy = rand_rango(-radio,2.0*radio);
+    printf("%f,%f\t", dx,dy);
+    if((int)(x+dx) >= n_columnas){
+      nueva_pos[0] = ((int)(x+dx))%n_columnas;
+    }
+    else if ((int)(x+dx) < 0){
+      nueva_pos[0] = n_columnas + ((int)(x+dx))%n_columnas;
+    }
+    else {
+      nueva_pos[0] =(int)(x+dx);
+    }
+    if((int)(y+dy) >= n_filas){
+      nueva_pos[1] = n_filas - ((int)(y+dy))%n_filas;
+      if(nueva_pos[0] >= n_columnas/2.0)
+        nueva_pos[0] -= (int)(n_columnas/2);
+      else
+        nueva_pos[0] += (int)(n_columnas/2);
+    }
+    else if ((int)(y+dy) < 0){
+      nueva_pos[1] = (-((int)(y+dy)))%n_filas;
+      if(nueva_pos[0] >= n_columnas/2.0)
+        nueva_pos[0] -= (int)(n_columnas/2);
+      else
+        nueva_pos[0] += (int)(n_columnas/2);
+    }
+    else {
+      nueva_pos[1] = (int)(y+dy);
+    }
+  } while(x==nueva_pos[0] && y==nueva_pos[1]);
+
+  return nueva_pos;
+}
+
+int* buscar_nueva_posicion_u(int x, int y, double radio){
+  int vuelta = 0;
+  double dx, dy, lat1, lat2, lon1;
+  double semivseno_lat, semivseno_rad, mul_cos, dist, dx_abs, random;
+  int* nueva_pos = malloc(2*sizeof(int));
+
+  dy = rand_rango(-radio,2.0*radio);
+  if((int)(y+dy) >= n_filas){
+    nueva_pos[1] = n_filas - ((int)(y+dy))%n_filas - 1;
+    vuelta = 1;
+  }
+  else if ((int)(y+dy) < 0){
+    nueva_pos[1] = (-((int)(y+dy)))%n_filas;
+    vuelta = 1;
+  }
+  else {
+    nueva_pos[1] = (int)(y+dy);
+  }
+
+  lon1 = (double)PI/(double)180*(double)longitud(x);
+  lat1 = (double)PI/(double)180*(double)latitud(y);
+  lat2 = (double)PI/(double)180*(double)latitud(nueva_pos[1]);
+  dist = distancia_ortodromica(x,y,0,y+radio);
+  semivseno_lat = (double)(pow((double)sin((double)(lat1-lat2)/(double)2.0),2));
+  semivseno_rad = (double)(pow((double)sin((double)dist/(double)(2*R_tierra)),2));
+  mul_cos = (double)((double)cos(lat1)*(double)cos(lat2));
+  dx_abs = (double)(2.0*(double)asin((double)sqrt((double)(semivseno_rad-semivseno_lat)/ \
+                                                  (double)(mul_cos))));
+  random = rand_rango(0,1);
+  if(random > 0.5)
+    dx = (((double)(dx_abs)/(double)(2.0*PI))+0.5)*n_columnas;
+  else
+    dx = -(((double)(dx_abs)/(double)(2.0*PI))+0.5)*n_columnas;
+
+  if((int)(x+dx) >= n_columnas){
+    nueva_pos[0] = ((int)(x+dx))%n_columnas;
+  }
+  else if ((int)(x+dx) < 0){
+    nueva_pos[0] = n_columnas + ((int)(x+dx))%n_columnas;
+  }
+  else {
+    nueva_pos[0] =(int)(x+dx);
+  }
+
+  if(vuelta)
+    if(nueva_pos[0] >= n_columnas/2.0)
+      nueva_pos[0] -= (int)(n_columnas/2);
+    else
+      nueva_pos[0] += (int)(n_columnas/2);
+
+  return nueva_pos;
+}
