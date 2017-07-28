@@ -1,68 +1,77 @@
+/* Se importan librerias necesarias*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <math.h>
 
+/* Se definen constantes*/
 #define n_filas         500
-#define n_columnas      709
-#define n_columnas_f    28
+#define n_columnas      744
+#define n_columnas_f    0
 #define n_columnas_o    744
 #define n_puntos_dn     100000
-#define n_puntos_MC     100001
-#define exp_est_rad     1
-#define exp_est_rad_max 1
+#define n_puntos_MC     2000
 #define n_iteraciones   1
 #define ORIGINAL        1
 #define MODIFICADA      0
 #define PI              3.14159265359
-#define sigma           160
-#define radio_max_n     20
-#define radio_max_u     50
+#define sigma           30
+#define radio_max_n     10
+#define radio_max_u     8000
 #define R_tierra        6371
 
-#define longitud(x) (((double)x/(double)n_columnas)-((double)1/(double)2))*360.0
-#define latitud(y) -(((double)y/(double)n_filas)-((double)1/(double)2))*180.0
+/* Se definen macros*/
+#define ind_a_lon(x) ((double)(x)/(double)(n_columnas)-0.5)*360.0
+#define ind_a_lat(y) -((double)(y)/(double)(n_filas)-0.5)*180.0
+#define lon_a_ind(x) (int)(((double)(x)/360.0+0.5)*(double)(n_columnas))
+#define lat_a_ind(y) (int)((-(double)(y)/180.0+0.5)*(double)(n_filas))
+#define rad_a_grad(x) (double)x*180.0/(double)(PI)
+#define grad_a_rad(x) (double)x*(double)(PI)/180.0
 #define rand_rango(vmin, rango) vmin+((double)rand()/((double)RAND_MAX + 1))*rango
+#define semivseno(a, b) (double)sin((double)(a-b)/2.0)*(double)sin((double)(a-b)/2.0)
 
+/*Encabezados de las funciones*/
 double** crear_matriz(double valor, int original);
 void lectura_archivo(char *nombre_archivo, double** mapa);
 double* crear_lista_normal();
 double distancia_ortodromica(int x1, int y1, int x2, int y2);
 int* buscar_nueva_posicion_n(int x,int y,double* lista_normal);
-int* buscar_nueva_posicion_u(int x,int y,double radio);
-void estimar_radio(int x, int y, double** mapa, int n, double** dist_max);
-void monte_carlo(double** mapa, double** d_max, double* lista_normal);
-void promedio_mc(double **mapa, double **d_max, double* lista_normal);
-int* encontrar_maximo(double **dist_max);
+int* buscar_nueva_posicion_u(int x,int y,double radio, double n, int n_dy);
+void estimar_radio(int x, int y, double** mapa, double** d_max, double** d_min);
+void monte_carlo(double** mapa, double** d_max, double** d_min, double* lista_normal);
+int* encontrar_maximo(double **d_min);
 void guardar_maximo(int* max_id, double dist, char* nombre_archivo);
 void liberar_matriz(double** matriz);
 
+/*Funcion principal*/
 int main() {
   srand(time(NULL));
 
   char nombre_archivo_lectura[20] = "map_data.txt";
   char nombre_archivo_escritura[20] = "pmax.txt";
+  char nombre_archivo_escritura2[20] = "map.txt";
 
   double** mapa = crear_matriz(0.0,MODIFICADA);
-  double** distancia_maxima = crear_matriz(0.0,MODIFICADA);
+  double** d_max = crear_matriz(PI*R_tierra,MODIFICADA);
+  double** d_min = crear_matriz(0.0,MODIFICADA);
   double* lista_normal = crear_lista_normal();
 
   lectura_archivo(nombre_archivo_lectura, mapa);
+  printf("Calculando punto mas lejano...\n");
+  monte_carlo(mapa, d_max, d_min, lista_normal);
+  int* id_max = encontrar_maximo(d_min);
 
-  printf("Calculando punto mas lejano\n");
-  promedio_mc(mapa, distancia_maxima, lista_normal);
-
-  int* id_max = encontrar_maximo(distancia_maxima);
-  //estimar_radio(id_max[0],id_max[1],mapa,exp_est_rad_max,distancia_maxima);
-  double dist = distancia_maxima[id_max[1]][id_max[0]];
-  double lon =  longitud(id_max[0]);
-  double lat = latitud(id_max[1]);
-  printf("las coordenadas del punto mas alejado son: %f, %f\n",lon,lat);
+  double lon =  ind_a_lon(id_max[0]);
+  double lat = ind_a_lat(id_max[1]);
+  double dist = d_min[id_max[1]][id_max[0]];
+  double dist2 = d_max[id_max[1]][id_max[0]];
+  printf("las coordenadas del punto mas alejado son: %f, %f; %f,%f\n",lon,lat,dist,dist2);
   guardar_maximo(id_max, dist, nombre_archivo_escritura);
 
   liberar_matriz(mapa);
-  liberar_matriz(distancia_maxima);
+  liberar_matriz(d_max);
+  liberar_matriz(d_min);
   free(id_max);
   free(lista_normal);
 
@@ -92,7 +101,7 @@ void lectura_archivo(char *nombre_archivo, double** mapa){
   while (fgets(linea, max_long, archivo)){
       char* copia_linea = strdup(linea);
       mapa_original[n_fila][n_columna] = strtod(strtok(copia_linea, " "),NULL);
-      while(n_columna<n_columnas-1){
+      while(n_columna<n_columnas_o-1){
         n_columna++;
       	mapa_original[n_fila][n_columna] = strtod(strtok(NULL, " "),NULL);
       }
@@ -131,19 +140,19 @@ double* crear_lista_normal(){
   return lista_normal;
 }
 double distancia_ortodromica(int x1, int y1, int x2, int y2){
-  double lon1 = (double)PI/(double)180*(double)longitud(x1);
-  double lat1 = (double)PI/(double)180*(double)latitud(y1);
-  double lon2 = (double)PI/(double)180*(double)longitud(x2);
-  double lat2 = (double)PI/(double)180*(double)latitud(y2);
-  double raiz_smvseno_lat = (double)sin((double)(lat1-lat2)/(double)2);
-  double raiz_smvseno_lon = (double)sin((double)(lon1-lon2)/(double)2);
-  double semivseno_lat = (double)(raiz_smvseno_lat*raiz_smvseno_lat);
-  double semivseno_lon = (double)(raiz_smvseno_lon*raiz_smvseno_lon);
-  double s2 = (double)cos(lat1)*(double)cos(lat2)*(double)semivseno_lon;
-  double raiz = (double)sqrt(semivseno_lat+s2);
-  double ang_central = (double)2*(double)(asin(raiz));
-  double distancia = (double)R_tierra * (double)ang_central;
-  //printf("%f,%f,%f,%f;%f\t", lat1,lon1,lat2,lon2,distancia);
+  double lon1, lat1, lon2, lat2, semivseno_lat, semivseno_lon, raiz, mul_cos;
+  double ang_central, distancia;
+  lon1 = grad_a_rad(ind_a_lon(x1));
+  lat1 = grad_a_rad(ind_a_lat(y1));
+  lon2 = grad_a_rad(ind_a_lon(x2));
+  lat2 = grad_a_rad(ind_a_lat(y2));
+  semivseno_lat = semivseno(lat1,lat2);
+  semivseno_lon = semivseno(lon1,lon2);
+  mul_cos = (double)cos(lat1)*(double)cos(lat2);
+  raiz = (double)sqrt(semivseno_lat + mul_cos*semivseno_lon);
+  ang_central = 2.0*(double)(asin(raiz));
+  distancia = (double)(R_tierra) * ang_central;
+
   return distancia;
 }
 int* buscar_nueva_posicion_n(int x, int y, double* lista_normal){
@@ -161,7 +170,7 @@ int* buscar_nueva_posicion_n(int x, int y, double* lista_normal){
       nueva_pos[0] = ((int)(x+dx))%n_columnas;
     }
     else if ((int)(x+dx) < 0){
-      nueva_pos[0] = n_columnas + ((int)(x+dx))%n_columnas;
+      nueva_pos[0] = n_columnas - (-(int)(x+dx))%n_columnas;
     }
     else {
       nueva_pos[0] =(int)(x+dx);
@@ -187,84 +196,110 @@ int* buscar_nueva_posicion_n(int x, int y, double* lista_normal){
 
   return nueva_pos;
 }
-int* buscar_nueva_posicion_u(int x, int y, double radio){
-  double dx, dy, random;
-  int* nueva_pos = malloc(2*sizeof(int));
+int* buscar_nueva_posicion_u(int x, int y, double radio, double n, int n_dy){
+  int invertir = 0;
+  double dx, random, delta, lon1, lat1, lat2, semivseno_lat, semivseno_rad;
+  double mul_cos, dx_abs_rad;
+  int* nueva_pos = malloc(3*sizeof(int));
 
-  do {
-    dx = rand_rango(-radio,2.0*radio);
-    dy = sqrt(radio*radio - dx*dx);
-    random = rand_rango(0,1);
-    if(random > 0.5)
-      dy *= -1;
-    if((int)(x+dx) >= n_columnas){
-      nueva_pos[0] = ((int)(x+dx))%n_columnas;
-    }
-    else if ((int)(x+dx) < 0){
-      nueva_pos[0] = n_columnas + ((int)(x+dx))%n_columnas;
-    }
-    else {
-      nueva_pos[0] =(int)(x+dx);
-    }
-    if((int)(y+dy) >= n_filas){
-      nueva_pos[1] = n_filas - ((int)(y+dy))%n_filas - 1;
-      if(nueva_pos[0] >= n_columnas/2.0)
-        nueva_pos[0] -= (int)(n_columnas/2);
-      else
-        nueva_pos[0] += (int)(n_columnas/2);
-    }
-    else if ((int)(y+dy) < 0){
-      nueva_pos[1] = (-((int)(y+dy)))%n_filas;
-      if(nueva_pos[0] >= n_columnas/2.0)
-        nueva_pos[0] -= (int)(n_columnas/2);
-      else
-        nueva_pos[0] += (int)(n_columnas/2);
-    }
-    else {
-      nueva_pos[1] = (int)(y+dy);
-    }
-  } while(x==nueva_pos[0] && y==nueva_pos[1]);
+  delta = rad_a_grad(radio/(double)(R_tierra))*(2.0*(double)n_dy/n-1.0);
+  nueva_pos[0] = 0;
+  nueva_pos[1] = lat_a_ind((double)(ind_a_lat(y))+delta);
+  nueva_pos[2] = 0;
+  //printf("%d, %f, %d\n", y,ind_a_lat(y)+delta,nueva_pos[1]);
+  if(nueva_pos[1] >= n_filas){
+    nueva_pos[1] = n_filas - nueva_pos[1]%n_filas - 1;
+    invertir = 1;
+  }
+  else if (nueva_pos[1] < 0){
+    nueva_pos[1] = (-nueva_pos[1])%n_filas;
+    invertir = 1;
+  }
+
+  lon1 = grad_a_rad(ind_a_lon(x));
+  lat1 = grad_a_rad(ind_a_lat(y));
+  lat2 = grad_a_rad(ind_a_lat(nueva_pos[1]));
+  semivseno_lat = semivseno(lat1, lat2);
+  semivseno_rad = semivseno((double)(radio)/(double)(R_tierra), 0.0);
+  mul_cos = (double)cos(lat1)*(double)cos(lat2);
+  dx_abs_rad = 2.0*asin(sqrt((semivseno_rad-semivseno_lat)/mul_cos));
+  dx = (double)(rad_a_grad(dx_abs_rad));
+  nueva_pos[0] = lon_a_ind((double)(ind_a_lon(x)+dx));
+  nueva_pos[2] = lon_a_ind((double)(ind_a_lon(x)-dx));
+  if(nueva_pos[0] >= n_columnas || nueva_pos[0] <= -n_columnas)
+    nueva_pos[0] = x;
+  if(nueva_pos[2] >= n_columnas || nueva_pos[2] <= -n_columnas)
+    nueva_pos[2] = x;
+
+  if(nueva_pos[0] >= n_columnas){
+    nueva_pos[0] = nueva_pos[0]%n_columnas;
+  }
+  else if (nueva_pos[0] < 0){
+    nueva_pos[0] = n_columnas + nueva_pos[0];
+  }
+  if(nueva_pos[2] >= n_columnas){
+    nueva_pos[2] = nueva_pos[2]%n_columnas;
+  }
+  else if (nueva_pos[2] < 0){
+    nueva_pos[2] = n_columnas + nueva_pos[2];
+  }
+
+  if(invertir){
+    if(nueva_pos[0] >= n_columnas/2.0)
+      nueva_pos[0] -= (int)(n_columnas/2);
+    else
+      nueva_pos[0] += (int)(n_columnas/2);
+
+    if(nueva_pos[2] >= n_columnas/2.0)
+      nueva_pos[2] -= (int)(n_columnas/2);
+    else
+      nueva_pos[2] += (int)(n_columnas/2);
+  }
 
   return nueva_pos;
 }
-void estimar_radio(int x,int y,double** mapa,int n,double** d_max){
-  int radio, rep, parar = 0;
-  double dist, max_dist = 0.0;
-  for(radio = 1; radio < radio_max_u; radio++){
-    for(rep = 0; rep < pow(1.15,radio*n); rep++){
-      int *nueva_pos = buscar_nueva_posicion_u(x,y,(double)radio);
+void estimar_radio(int x,int y,double** mapa,double** d_max, double** d_min){
+  int rep;
+  double radio, dist, max_dist = 0.0;
+  for(radio = 20.0; radio < radio_max_u && radio < d_max[y][x]; radio += 20.0){
+    for(rep = 0; rep < radio/10.0 ; rep++){
+      int *nueva_pos = buscar_nueva_posicion_u(x,y,radio,radio/10.0,rep);
       dist = distancia_ortodromica(x, y, nueva_pos[0], nueva_pos[1]);
-      if(dist > max_dist)
-        max_dist = dist;
-      if(mapa[nueva_pos[1]][nueva_pos[0]]){
-        parar = 1;
+
+      if(mapa[nueva_pos[1]][nueva_pos[0]] == 1 || mapa[nueva_pos[1]][nueva_pos[2]] == 1){
+        if(dist < d_max[y][x]){
+          d_max[y][x] = dist;
+          if(dist < d_min[y][x])
+            d_min[y][x] = dist;
+        }
         break;
+      }
+      else{
+        if(dist > d_min[y][x] && dist < d_max[y][x])
+          d_min[y][x] = dist;
       }
       free(nueva_pos);
     }
-    if(parar)
-      break;
-    if(max_dist > d_max[y][x])
-      d_max[y][x] = max_dist;
     //printf("%f\t", max_dist);
   }
 }
-void monte_carlo(double** mapa, double** d_max, double* lista_normal){
+void monte_carlo(double** mapa, double** d_max, double** d_min, double* lista_normal){
   int x, y, rand_id_x, rand_id_y, *nueva_pos, i;
   double dx, dy, dist, alpha, beta;
   do {
     x = (int)rand_rango(0,n_columnas);
     y = (int)rand_rango(0,n_filas);
   } while(mapa[y][x] == 1);
-  estimar_radio(x,y,mapa,exp_est_rad,d_max);
+  printf("Iteracion 1 de %d...",n_puntos_MC);
+  estimar_radio(x,y,mapa,d_max,d_min);
   for(i = 1; i<n_puntos_MC; i++){
-    //printf("Iteracion %d de %d...\n",i,n_puntos_MC-1);
+    printf("\rIteracion %d de %d...",i+1,n_puntos_MC);
     do {
       nueva_pos = buscar_nueva_posicion_n(x,y,lista_normal);
     } while(mapa[nueva_pos[1]][nueva_pos[0]] == 1);
-    estimar_radio(nueva_pos[0],nueva_pos[1],mapa,exp_est_rad,d_max);
-    if(d_max[y][x] == 0.0){
-      if(d_max[nueva_pos[1]][nueva_pos[0]]){
+    estimar_radio(nueva_pos[0],nueva_pos[1],mapa,d_max,d_min);
+    if(d_min[y][x] == 0.0){
+      if(d_min[nueva_pos[1]][nueva_pos[0]]){
         alpha = 0.5;
       }
       else{
@@ -272,7 +307,7 @@ void monte_carlo(double** mapa, double** d_max, double* lista_normal){
       }
     }
     else{
-      alpha = d_max[nueva_pos[1]][nueva_pos[0]]/d_max[y][x];
+      alpha = d_min[nueva_pos[1]][nueva_pos[0]]/d_min[y][x];
     }
     if(alpha>1){
       x = nueva_pos[0];
@@ -287,25 +322,19 @@ void monte_carlo(double** mapa, double** d_max, double* lista_normal){
     }
     free(nueva_pos);
   }
+  printf("\n");
 }
-void promedio_mc(double **mapa, double **d_max, double *lista_normal){
-  int i;
-  for(i = 0; i<n_iteraciones; i++){
-    //printf("Iteracion %d de %d...\n",i+1,n_iteraciones);
-    monte_carlo(mapa, d_max, lista_normal);
-  }
-}
-int* encontrar_maximo(double** distancia_maxima){
+int* encontrar_maximo(double** d_min){
   int i, j;
   int *indices = malloc(2*sizeof(int));
   double maximo;
-  maximo = distancia_maxima[0][0];
+  maximo = d_min[0][0];
   for(i = 0 ; i < n_filas ; i++)
     for(j = 0 ; j < n_columnas; j++)
-      if(distancia_maxima[i][j] > maximo){
+      if(d_min[i][j] >= maximo){
         indices[0] = j;
         indices[1] = i;
-        maximo = distancia_maxima[i][j];
+        maximo = d_min[i][j];
       }
   return indices;
 }
